@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0d14">
+<title>در شبی ستاره باران — فهرست</title>
+
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
+
+<style>
+  @font-face {
+    font-family: 'Yekan';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Yekan';
+    src: url('https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: 700; font-display: swap;
+  }
+
+  :root {
+    --bg: #0a0d14;
+    --bg-2: #0f141d;
+    --card: #131822;
+    --text: #e8e6e0;
+    --text-2: #a8a9ad;
+    --muted: #6b6f78;
+    --border: #1f2533;
+    --gold: #d4a95a;
+    --gold-soft: #3a2f1c;
+    --gold-glow: #4a3a20;
+    --font-size: 15px;
+    --title-gap: 2px;
+    --title-pad: 6px;
+    --reader-size: 17px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Yekan', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-size: var(--font-size);
+    transition: background .5s, color .5s, font-size .3s;
+    overflow-x: hidden;
+    min-height: 100dvh;
+  }
+
+  svg { width: 24px; height: 24px; display: block; }
+
+  .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+  .bg-canvas .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .15; animation: drift 20s ease-in-out infinite; }
+  .orb.o1 { width: 380px; height: 380px; background: radial-gradient(circle, var(--gold-glow), transparent 70%); top: -100px; right: -100px; }
+  .orb.o2 { width: 300px; height: 300px; background: radial-gradient(circle, #b8d4e8, transparent 70%); bottom: -80px; left: -80px; animation-delay: -7s; }
+  @keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(30px,-20px) scale(1.1); } 66% { transform: translate(-20px,30px) scale(.95); } }
+
+  .sparkle { position: absolute; width: 2px; height: 2px; background: var(--gold); border-radius: 50%; opacity: 0; animation: sparkle 4s infinite; pointer-events: none; }
+  @keyframes sparkle { 0%,100% { opacity: 0; transform: scale(0); } 50% { opacity: .8; transform: scale(1); } }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes floatSoft { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+  @keyframes shine { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+  @keyframes drawLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes bloom { 0% { opacity: 0; transform: scale(.85); } 60% { opacity: 1; transform: scale(1.03); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes itemIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* اسپلش */
+  .splash-screen { position: fixed; inset: 0; z-index: 9999; background: #05070a; display: flex; align-items: center; justify-content: center; transition: opacity 0.8s ease, visibility 0.8s ease; }
+  .splash-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  .splash-screen img { max-width: 100%; max-height: 100%; object-fit: cover; width: 100%; height: 100%; animation: splashZoom 4s ease-out forwards; }
+  @keyframes splashZoom { 0% { transform: scale(1); } 100% { transform: scale(1.05); } }
+
+  /* هدر */
+  header {
+    position: sticky; top: 0; z-index: 100; padding: 10px 12px;
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b2e44 100%);
+    backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+    overflow: hidden; min-height: 60px;
+  }
+  header::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 10% 30%, #fff, transparent), radial-gradient(1px 1px at 30% 70%, #fff, transparent), radial-gradient(1px 1px at 50% 20%, #fff, transparent), radial-gradient(1px 1px at 70% 50%, #fff, transparent), radial-gradient(1px 1px at 85% 80%, #fff, transparent); opacity: .25; pointer-events: none; animation: headerTwinkle 4s infinite; }
+  @keyframes headerTwinkle { 0%, 100% { opacity: .15; } 50% { opacity: .35; } }
+
+  .hdr-btn { width: 38px; height: 38px; border-radius: 11px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; cursor: pointer; position: relative; z-index: 2; flex-shrink: 0; transition: all .35s cubic-bezier(.34,1.56,.64,1); padding: 0; }
+  .hdr-btn:hover { background: rgba(255,255,255,.12); border-color: var(--gold); }
+  .hdr-btn:active { transform: scale(.9); }
+  .hdr-btn svg { width: 19px; height: 19px; }
+
+  header .menu-btn .lines { width: 22px; height: 16px; position: relative; display: flex; flex-direction: column; justify-content: space-between; }
+  header .menu-btn .lines span { display: block; height: 2px; background: currentColor; border-radius: 2px; transition: all .35s cubic-bezier(.34,1.56,.64,1); transform-origin: center; }
+  header .menu-btn .lines span:nth-child(1) { width: 100%; }
+  header .menu-btn .lines span:nth-child(2) { width: 70%; align-self: flex-end; }
+  header .menu-btn .lines span:nth-child(3) { width: 100%; }
+  header .menu-btn.open .lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  header .menu-btn.open .lines span:nth-child(2) { opacity: 0; transform: translateX(20px); }
+  header .menu-btn.open .lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  header .title-block { flex: 1; min-width: 0; position: relative; z-index: 2; text-align: right; padding-right: 4px; }
+  header .title-block h1 { font-size: 13.5px; font-weight: 700; line-height: 1.3; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  header .title-block p { font-size: 10px; color: rgba(255,255,255,.65); line-height: 1.2; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  header .mark { width: 38px; height: 38px; display: grid; place-items: center; color: var(--gold); flex-shrink: 0; position: relative; z-index: 2; }
+  header .mark svg { width: 20px; height: 20px; animation: floatSoft 5s ease-in-out infinite; }
+
+  .hdr-btn.bookmark-active { color: var(--gold); border-color: var(--gold); background: rgba(212,169,90,.12); }
+  .hdr-btn.bookmark-active svg { fill: var(--gold); }
+
+  .container { max-width: 680px; margin: 0 auto; padding: 14px 14px 60px; position: relative; z-index: 1; }
+
+  .book-intro { text-align: center; padding: 12px 12px 16px; animation: bloom .9s cubic-bezier(.34,1.56,.64,1); }
+  .book-intro .ornament { color: var(--gold); font-size: 11px; letter-spacing: 6px; opacity: .7; margin-bottom: 8px; }
+  .book-intro h2 { font-size: 24px; font-weight: 900; letter-spacing: -.8px; line-height: 1.3; margin-bottom: 5px; display: inline-block; background: linear-gradient(135deg, var(--text) 0%, var(--gold) 50%, var(--text) 100%); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: shine 6s linear infinite; }
+  .book-intro .sub { font-size: 10.5px; color: var(--muted); letter-spacing: 1.5px; }
+  .book-intro .author-line { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; color: var(--text-2); font-weight: 500; }
+  .book-intro .author-line::before, .book-intro .author-line::after { content: ''; width: 22px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+
+  /* جستجو */
+  .search-wrap { margin: 8px 0 4px; position: relative; animation: fadeUp .5s ease backwards; }
+  .search-box { display: flex; align-items: center; gap: 8px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 9px 12px; transition: all .3s; }
+  .search-box:focus-within { border-color: color-mix(in srgb, var(--gold) 50%, var(--border)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 12%, transparent); }
+  .search-box svg { width: 17px; height: 17px; color: var(--muted); flex-shrink: 0; }
+  .search-box input { flex: 1; min-width: 0; background: transparent; border: none; outline: none; color: var(--text); font-family: inherit; font-size: 13px; padding: 0; }
+  .search-box input::placeholder { color: var(--muted); }
+  .search-clear { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-2); border: none; color: var(--muted); display: none; place-items: center; cursor: pointer; flex-shrink: 0; transition: all .2s; }
+  .search-clear:hover { background: var(--border); color: var(--text); }
+  .search-clear svg { width: 12px; height: 12px; }
+  .search-box.has-value .search-clear { display: grid; }
+
+  .search-empty { text-align: center; padding: 30px 20px; color: var(--muted); font-size: 12.5px; display: none; }
+  .search-empty.show { display: block; }
+  .search-empty svg { width: 36px; height: 36px; opacity: .4; margin: 0 auto 10px; }
+
+  mark.hl { background: color-mix(in srgb, var(--gold) 30%, transparent); color: var(--gold); padding: 0 2px; border-radius: 3px; font-weight: 600; }
+
+  .search-snippet { font-size: 11.5px; color: var(--muted); line-height: 1.6; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+  .search-snippet mark { background: transparent; color: var(--gold); font-weight: bold; }
+
+  .section-head { display: flex; align-items: center; gap: 10px; margin: 12px 2px 8px; animation: fadeUp .5s ease backwards; }
+  .section-head .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); flex-shrink: 0; }
+  .section-head b { font-size: 12px; font-weight: 700; color: var(--text); }
+  .section-head .line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); animation: drawLine .8s .3s ease backwards; transform-origin: right; }
+  .section-head .cnt { font-size: 10px; color: var(--muted); font-weight: 400; }
+
+  .chapter-block { background: var(--card); border: 1px solid var(--border); border-radius: 14px; margin-bottom: 8px; overflow: hidden; transition: all .4s; animation: fadeUp .5s ease backwards; }
+  .chapter-block:last-child { margin-bottom: 0; }
+  .chapter-block.open { border-color: color-mix(in srgb, var(--gold) 40%, var(--border)); }
+
+  .chapter-head { padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px; user-select: none; transition: all .3s; }
+  .chapter-head:active { opacity: .8; }
+
+  .chapter-head .ch-num { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, var(--gold), #d4a95a); color: #0a0d14; display: grid; place-items: center; font-size: 15px; font-weight: 800; flex-shrink: 0; transition: all .4s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 3px 10px color-mix(in srgb, var(--gold) 35%, transparent); }
+  .chapter-block.open .chapter-head .ch-num { transform: scale(1.05); box-shadow: 0 4px 16px color-mix(in srgb, var(--gold) 55%, transparent); }
+
+  .chapter-head .ch-info { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .chapter-head .ch-info b { font-size: 14.5px; font-weight: 700; line-height: 1.45; color: var(--text); letter-spacing: -.2px; }
+  .chapter-head .ch-info span { font-size: 10px; color: var(--muted); background: var(--bg-2); padding: 2px 8px; border-radius: 999px; flex-shrink: 0; font-weight: 500; white-space: nowrap; }
+
+  .chapter-head .ch-arrow { color: var(--muted); flex-shrink: 0; transition: transform .5s cubic-bezier(.34,1.56,.64,1), color .3s; display: grid; place-items: center; }
+  .chapter-head .ch-arrow svg { width: 16px; height: 16px; }
+  .chapter-block.open .chapter-head .ch-arrow { transform: rotate(180deg); color: var(--gold); }
+
+  .titles-list { max-height: 0; overflow: hidden; transition: max-height .6s cubic-bezier(.4,0,.2,1); }
+  .chapter-block.open .titles-list { max-height: 3000px; }
+
+  .titles-list-inner { padding: 4px 14px 12px 14px; border-top: 1px solid var(--border); margin: 0 6px; }
+
+  .title-item { display: flex; align-items: center; gap: 10px; padding: var(--title-pad) 4px; margin-top: var(--title-gap); border-radius: 6px; cursor: pointer; transition: all .3s cubic-bezier(.34,1.56,.64,1); position: relative; align-items: flex-start; }
+  .title-item:active { opacity: .6; transform: translateX(-2px); }
+
+  .title-item .bullet { width: 5px; height: 5px; border-radius: 50%; background: var(--gold-soft); flex-shrink: 0; transition: all .3s; margin-top: 8px; }
+  .title-item:hover .bullet { background: var(--gold); transform: scale(1.5); box-shadow: 0 0 10px var(--gold); }
+
+  .title-item .t-name { flex: 1; min-width: 0; font-size: 13px; font-weight: 400; color: var(--text-2); line-height: 1.6; transition: color .3s; }
+  .title-item:hover .t-name { color: var(--text); font-weight: 500; }
+
+  .title-item .t-go { color: var(--muted); opacity: 0; transition: all .3s; flex-shrink: 0; margin-top: 6px; }
+  .title-item:hover .t-go { color: var(--gold); opacity: 1; transform: translateX(-3px); }
+  .title-item .t-go svg { width: 13px; height: 13px; }
+
+  footer { text-align: center; padding: 20px 16px 16px; color: var(--muted); font-size: 10px; position: relative; z-index: 1; }
+  footer .orn { color: var(--gold); letter-spacing: 5px; font-size: 9px; opacity: .5; margin-bottom: 6px; }
+
+  /* Overlay */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .4s; }
+  .overlay.open { opacity: 1; pointer-events: auto; }
+
+  /* منوی کشویی */
+  .drawer { position: fixed; top: 0; right: 0; width: 80%; max-width: 320px; height: 100dvh; background: linear-gradient(180deg, #0d1622 0%, #0a0f1a 100%); z-index: 201; transform: translateX(100%); transition: transform .5s cubic-bezier(.32,.72,0,1); box-shadow: -10px 0 60px rgba(0,0,0,.5); display: flex; flex-direction: column; overflow: hidden; border-left: 1px solid var(--border); }
+  .drawer.open { transform: translateX(0); }
+
+  .drawer-head { padding: 24px 24px 20px; position: relative; z-index: 2; border-bottom: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; gap: 14px; }
+  .drawer-head .logo-mark { width: 48px; height: 48px; border-radius: 14px; background: linear-gradient(135deg, var(--gold), #d4a95a); color: #0a0d14; display: grid; place-items: center; flex-shrink: 0; box-shadow: 0 6px 20px color-mix(in srgb, var(--gold) 40%, transparent); animation: floatSoft 5s ease-in-out infinite; }
+  .drawer-head .logo-mark svg { width: 24px; height: 24px; }
+  .drawer-head .info { flex: 1; min-width: 0; }
+  .drawer-head .info h3 { font-size: 15px; font-weight: 800; color: #fff; line-height: 1.3; margin-bottom: 3px; }
+  .drawer-head .info p { font-size: 11px; color: rgba(255,255,255,.5); line-height: 1.2; }
+  .drawer-head .close-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.6); display: grid; place-items: center; cursor: pointer; transition: all .35s cubic-bezier(.34,1.56,.64,1); flex-shrink: 0; }
+  .drawer-head .close-btn:hover { background: rgba(255,255,255,.15); color: #fff; }
+  .drawer-head .close-btn svg { width: 14px; height: 14px; }
+
+  .drawer-body { flex: 1; overflow-y: auto; padding: 16px 16px 24px; position: relative; z-index: 2; }
+
+  .menu-item { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: 12px; cursor: pointer; transition: all .35s cubic-bezier(.34,1.56,.64,1); position: relative; overflow: hidden; opacity: 0; transform: translateX(-30px); background: transparent; border: none; color: inherit; font-family: inherit; width: 100%; text-align: right; }
+  .drawer.open .menu-item { animation: itemIn .5s cubic-bezier(.34,1.56,.64,1) forwards; }
+  .drawer.open .menu-item:nth-child(1) { animation-delay: .15s; }
+  .drawer.open .menu-item:nth-child(2) { animation-delay: .22s; }
+  .drawer.open .menu-item:nth-child(3) { animation-delay: .29s; }
+  .drawer.open .menu-item:nth-child(4) { animation-delay: .36s; }
+  .drawer.open .menu-item:nth-child(5) { animation-delay: .43s; }
+
+  .menu-item:hover { background: rgba(255,255,255,.04); transform: translateX(-4px); }
+
+  .menu-item .icon-box { width: 40px; height: 40px; border-radius: 11px; background: rgba(212,169,90,.12); border: 1px solid rgba(212,169,90,.2); color: var(--gold); display: grid; place-items: center; flex-shrink: 0; transition: all .4s cubic-bezier(.34,1.56,.64,1); }
+  .menu-item:hover .icon-box { background: linear-gradient(135deg, var(--gold), #d4a95a); color: #0a0d14; transform: rotate(-8deg) scale(1.08); }
+  .menu-item .icon-box svg { width: 19px; height: 19px; }
+
+  .menu-item .text-block { flex: 1; min-width: 0; }
+  .menu-item .text-block b { display: block; font-size: 14px; font-weight: 600; color: #e8e6e0; line-height: 1.4; margin-bottom: 2px; }
+  .menu-item .text-block small { display: block; font-size: 10.5px; color: rgba(255,255,255,.4); line-height: 1.3; }
+
+  .menu-item .arrow { color: rgba(255,255,255,.25); flex-shrink: 0; transition: all .35s; }
+  .menu-item:hover .arrow { color: var(--gold); transform: translateX(-4px); }
+  .menu-item .arrow svg { width: 16px; height: 16px; }
+
+  .drawer-foot { padding: 16px 24px 24px; border-top: 1px solid rgba(255,255,255,.06); text-align: center; }
+  .drawer-foot .orn { color: var(--gold); letter-spacing: 6px; font-size: 9px; opacity: .5; margin-bottom: 8px; }
+  .drawer-foot p { font-size: 10px; color: rgba(255,255,255,.35); line-height: 1.6; }
+  .drawer-foot p b { color: rgba(255,255,255,.6); font-weight: 600; }
+
+  /* تنظیمات */
+  .settings-sheet { position: fixed; bottom: 0; right: 0; left: 0; background: var(--card); border-radius: 24px 24px 0 0; z-index: 301; max-height: 80dvh; overflow-y: auto; transform: translateY(100%); transition: transform .5s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 -10px 40px rgba(0,0,0,.5); padding-bottom: max(20px, env(safe-area-inset-bottom)); border-top: 1px solid var(--border); }
+  .settings-sheet.open { transform: translateY(0); }
+
+  .sheet-grip { width: 40px; height: 4px; background: var(--border); border-radius: 4px; margin: 12px auto 4px; }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 20px 16px; border-bottom: 1px solid var(--border); }
+  .sheet-head b { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .sheet-head b svg { width: 18px; height: 18px; color: var(--gold); }
+  .sheet-close { width: 32px; height: 32px; border-radius: 50%; background: var(--bg-2); border: none; color: var(--text-2); display: grid; place-items: center; cursor: pointer; }
+  .sheet-close svg { width: 16px; height: 16px; }
+
+  .sheet-body { padding: 16px 20px; }
+  .settings-section { margin-bottom: 22px; }
+  .settings-section:last-child { margin-bottom: 0; }
+  .settings-section .s-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .settings-section .s-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .setting-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+  .setting-row .s-label { font-size: 13px; font-weight: 500; color: var(--text); flex-shrink: 0; }
+  .setting-row .s-value { font-size: 12px; color: var(--gold); font-weight: 700; min-width: 40px; text-align: left; direction: ltr; }
+
+  .slider-wrap { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; flex: 1; height: 4px; background: var(--border); border-radius: 4px; outline: none; direction: ltr; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--gold); border-radius: 50%; cursor: pointer; }
+
+  .color-row { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 0; }
+  .color-dot { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; transition: transform .3s; border: 2px solid transparent; }
+  .color-dot:hover { transform: scale(1.1); }
+  .color-dot.active { transform: scale(1.15); border-color: var(--text); box-shadow: 0 0 0 3px var(--card), 0 0 0 5px var(--gold); }
+  .color-dot.gold-1 { background: #b8924a; }
+  .color-dot.gold-2 { background: #c9a227; }
+  .color-dot.rose   { background: #d97a8f; }
+  .color-dot.blue   { background: #4a7ab8; }
+  .color-dot.green  { background: #4a9b6f; }
+  .color-dot.purple { background: #8b5fb8; }
+  .color-dot.gray   { background: #6b7280; }
+
+  .btn-row { display: flex; gap: 8px; margin-top: 8px; }
+  .s-btn { flex: 1; padding: 11px 14px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-2); color: var(--text); font-family: inherit; font-size: 12.5px; font-weight: 600; cursor: pointer; transition: all .3s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .s-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .s-btn.primary { background: linear-gradient(135deg, var(--gold), #d4a95a); color: #0a0d14; border-color: transparent; font-weight: 700; }
+  .s-btn svg { width: 14px; height: 14px; }
+
+  .toast { position: fixed; bottom: 30px; right: 50%; transform: translateX(50%) translateY(30px); background: var(--card); color: var(--text); border: 1px solid var(--border); padding: 10px 20px; border-radius: 999px; font-size: 12px; font-weight: 500; opacity: 0; pointer-events: none; transition: all .5s; z-index: 500; box-shadow: 0 12px 40px rgba(0,0,0,.5); white-space: nowrap; display: flex; align-items: center; gap: 8px; }
+  .toast svg { width: 13px; height: 13px; color: var(--gold); }
+  .toast.show { opacity: 1; transform: translateX(50%) translateY(0); }
+
+  /* صفحه خواندن */
+  .reader-page { position: fixed; inset: 0; z-index: 400; background: var(--bg); display: flex; flex-direction: column; transform: translateX(-100%); transition: transform .45s cubic-bezier(.32,.72,0,1); overflow: hidden; }
+  .reader-page.open { transform: translateX(0); }
+
+  .reader-topbar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; min-height: 58px; background: linear-gradient(135deg, #0d1b2a 0%, #1b2e44 100%); border-bottom: 1px solid var(--border); flex-shrink: 0; position: relative; overflow: hidden; }
+  .reader-topbar::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(1px 1px at 12% 30%, #fff, transparent), radial-gradient(1px 1px at 35% 70%, #fff, transparent), radial-gradient(1px 1px at 55% 25%, #fff, transparent), radial-gradient(1px 1px at 78% 60%, #fff, transparent), radial-gradient(1px 1px at 90% 80%, #fff, transparent); opacity: .2; pointer-events: none; }
+
+  .reader-topbar .back-btn { width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); color: #fff; display: grid; place-items: center; cursor: pointer; flex-shrink: 0; position: relative; z-index: 2; transition: all .3s cubic-bezier(.34,1.56,.64,1); padding: 0; }
+  .reader-topbar .back-btn:hover { background: rgba(255,255,255,.14); border-color: var(--gold); color: var(--gold); }
+  .reader-topbar .back-btn:active { transform: scale(.9); }
+  .reader-topbar .back-btn svg { width: 20px; height: 20px; }
+
+  .reader-topbar .rt-info { flex: 1; min-width: 0; position: relative; z-index: 2; }
+  .reader-topbar .rt-ch { font-size: 10px; color: rgba(255,255,255,.55); line-height: 1.3; margin-bottom: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .reader-topbar .rt-title { font-size: 14px; font-weight: 700; color: #fff; line-height: 1.35; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .reader-topbar .rt-num { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--gold), #d4a95a); color: #0a0d14; display: grid; place-items: center; font-size: 13px; font-weight: 800; flex-shrink: 0; position: relative; z-index: 2; box-shadow: 0 3px 10px color-mix(in srgb, var(--gold) 35%, transparent); }
+
+  .reader-progress { height: 3px; background: var(--border); flex-shrink: 0; position: relative; overflow: hidden; }
+  .reader-progress .bar { position: absolute; top: 0; right: 0; bottom: 0; width: 0%; background: linear-gradient(90deg, #b8924a 0%, var(--gold) 50%, #f0d28a 100%); box-shadow: 0 0 8px color-mix(in srgb, var(--gold) 60%, transparent); transition: width .08s linear; border-radius: 0 0 0 2px; }
+
+  .reader-content { flex: 1; overflow-y: auto; padding: 24px 20px 80px; font-size: var(--reader-size); line-height: 2; color: var(--text); -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+  .reader-content::-webkit-scrollbar { width: 6px; }
+  .reader-content::-webkit-scrollbar-track { background: transparent; }
+  .reader-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  .reader-content .inner { max-width: 680px; margin: 0 auto; }
+
+  .reader-content .paragraph { margin-bottom: 1.2em; text-align: justify; text-justify: inter-word; }
+  .reader-content .paragraph:first-child::first-letter { font-size: 2.4em; font-weight: 900; color: var(--gold); float: right; line-height: 1; margin-left: 8px; margin-top: 6px; }
+
+  .reader-end { text-align: center; padding: 40px 20px 20px; color: var(--muted); }
+  .reader-end .orn { color: var(--gold); opacity: .5; margin-bottom: 16px; font-size: 13px; letter-spacing: 6px; }
+  .reader-end .end-quote { font-size: 0.95em; line-height: 1.9; color: var(--text-2); font-style: italic; max-width: 480px; margin: 0 auto 20px; position: relative; padding: 0 24px; }
+  .reader-end .end-quote::before, .reader-end .end-quote::after { color: var(--gold); font-size: 1.6em; opacity: .4; position: absolute; line-height: 1; }
+  .reader-end .end-quote::before { content: '«'; top: -4px; right: 0; }
+  .reader-end .end-quote::after { content: '»'; bottom: -14px; left: 0; }
+  .reader-end .end-label { font-size: 10.5px; color: var(--muted); letter-spacing: 3px; opacity: .6; margin-top: 8px; }
+
+  .reader-content .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 80px 20px; color: var(--muted); font-size: 13px; }
+  .reader-content .loading .spinner { width: 34px; height: 34px; border: 2px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
+
+  .reader-content .error { text-align: center; padding: 50px 20px; color: var(--muted); font-size: 13px; line-height: 1.8; }
+  .reader-content .error b { color: var(--text); display: block; margin-bottom: 8px; font-size: 14px; }
+
+  /* لیست بوکمارک‌ها */
+  .bm-list { max-width: 680px; margin: 0 auto; padding: 18px 16px 60px; }
+  .bm-item { display: flex; align-items: center; gap: 12px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; transition: all .3s cubic-bezier(.34,1.56,.64,1); animation: fadeUp .4s ease backwards; }
+  .bm-item:hover { border-color: color-mix(in srgb, var(--gold) 40%, var(--border)); transform: translateX(-3px); }
+  .bm-item .bm-icon { width: 36px; height: 36px; border-radius: 9px; background: color-mix(in srgb, var(--gold) 12%, transparent); border: 1px solid color-mix(in srgb, var(--gold) 25%, transparent); color: var(--gold); display: grid; place-items: center; flex-shrink: 0; }
+  .bm-item .bm-icon svg { width: 17px; height: 17px; fill: var(--gold); }
+  .bm-item .bm-info { flex: 1; min-width: 0; }
+  .bm-item .bm-info .bm-ch { font-size: 10px; color: var(--muted); margin-bottom: 1px; }
+  .bm-item .bm-info .bm-title { font-size: 13.5px; font-weight: 600; color: var(--text); line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bm-item .bm-remove { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-2); border: 1px solid var(--border); color: var(--muted); display: grid; place-items: center; cursor: pointer; flex-shrink: 0; transition: all .25s; }
+  .bm-item .bm-remove:hover { background: rgba(217,122,143,.15); border-color: #d97a8f; color: #d97a8f; }
+  .bm-item .bm-remove svg { width: 13px; height: 13px; }
+
+  .bm-empty { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 13px; line-height: 1.9; }
+  .bm-empty svg { width: 44px; height: 44px; opacity: .35; margin: 0 auto 14px; color: var(--gold); }
+  .bm-empty b { display: block; color: var(--text); margin-bottom: 6px; font-size: 14px; }
+
+  /* صفحه بوکمارک‌ها */
+  .bookmarks-page { position: fixed; inset: 0; z-index: 400; background: var(--bg); display: flex; flex-direction: column; transform: translateX(-100%); transition: transform .45s cubic-bezier(.32,.72,0,1); overflow: hidden; }
+  .bookmarks-page.open { transform: translateX(0); }
+
+  @media (min-width: 640px) {
+    .book-intro h2 { font-size: 30px; }
+    .container { padding: 20px 20px 80px; }
+    .settings-sheet { max-width: 480px; right: 50%; left: auto; transform: translate(50%, 100%); }
+    .settings-sheet.open { transform: translate(50%, 0); }
+    .reader-content { padding: 40px 32px 100px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- اسپلش -->
+<div class="splash-screen" id="splashScreen">
+  <img src="cover.jpg" alt="در شبی ستاره باران" id="splashImage">
+</div>
+
+<div class="bg-canvas">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+</div>
+
+<!-- هدر -->
+<header>
+  <button class="hdr-btn menu-btn" id="menuBtn" onclick="toggleMenu()" aria-label="منو">
+    <span class="lines"><span></span><span></span><span></span></span>
+  </button>
+
+  <div class="title-block">
+    <h1>در شبی ستاره باران</h1>
+    <p>محمد قائدی بارده</p>
+  </div>
+
+  <button class="hdr-btn" onclick="toggleSearch()" aria-label="جستجو">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+  </button>
+
+  <button class="hdr-btn" id="bookmarkBtn" onclick="openBookmarks()" aria-label="بوکمارک‌ها">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    </svg>
+  </button>
+
+  <div class="mark">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.6-6.3 4.6 2.3-7.4-6-4.6h7.6z"/>
+    </svg>
+  </div>
+</header>
+
+<main class="container">
+  <div class="book-intro">
+    <div class="ornament">✦ ✧ ✦</div>
+    <h2>در شبی ستاره باران</h2>
+    <p class="sub">فهرست مطالب</p>
+    <div class="author-line">محمد قائدی بارده</div>
+  </div>
+
+  <div class="search-wrap" id="searchWrap" style="display:none">
+    <div class="search-box" id="searchBox">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" id="searchInput" placeholder="جستجو در کل کتاب (مثلاً: روبا)..." oninput="onSearch(this.value)">
+      <button class="search-clear" onclick="clearSearch()" aria-label="پاک کردن">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="section-head">
+    <span class="dot"></span>
+    <b>فصل‌های کتاب</b>
+    <span class="line"></span>
+    <span class="cnt" id="bookCount">در حال بارگذاری…</span>
+  </div>
+
+  <div id="chapters"></div>
+
+  <div class="search-empty" id="searchEmpty">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <div>نتیجه‌ای یافت نشد</div>
+  </div>
+</main>
+
+<footer>
+  <div class="orn">✦ ✧ ✦</div>
+  <p>در شبی ستاره باران · محمد قائدی بارده</p>
+</footer>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- منو -->
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <div class="logo-mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.6-6.3 4.6 2.3-7.4-6-4.6h7.6z"/>
+      </svg>
+    </div>
+    <div class="info">
+      <h3>در شبی ستاره باران</h3>
+      <p>محمد قائدی بارده</p>
+    </div>
+    <button class="close-btn" onclick="closeAll()" aria-label="بستن">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="drawer-body">
+    <button class="menu-item" onclick="menuAction('معرفی کتاب')">
+      <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+      <span class="text-block"><b>معرفی کتاب</b><small>درباره‌ی این اثر</small></span>
+      <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></span>
+    </button>
+
+    <button class="menu-item" onclick="menuAction('تماس با ما')">
+      <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+      <span class="text-block"><b>تماس با ما</b><small>نظر، پیشنهاد، انتقاد</small></span>
+      <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></span>
+    </button>
+
+    <button class="menu-item" onclick="menuAction('امتیاز به برنامه')">
+      <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+      <span class="text-block"><b>امتیاز به برنامه</b><small>پشتیبانی از ما با ۵ ستاره</small></span>
+      <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></span>
+    </button>
+
+    <button class="menu-item" onclick="openSettings()">
+      <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg></span>
+      <span class="text-block"><b>تنظیمات ظاهر</b><small>رنگ، فونت، فاصله</small></span>
+      <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></span>
+    </button>
+
+    <button class="menu-item" onclick="menuAction('اشتراک‌گذاری')">
+      <span class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></span>
+      <span class="text-block"><b>اشتراک‌گذاری</b><small>معرفی کتاب به دوستان</small></span>
+      <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></span>
+    </button>
+  </div>
+
+  <div class="drawer-foot">
+    <div class="orn">✦ ✧ ✦</div>
+    <p>نسخه <b>۱.۰</b></p>
+    <p style="margin-top:4px;">ساخته‌شده با ❤️</p>
+  </div>
+</aside>
+
+<!-- تنظیمات -->
+<div class="settings-sheet" id="settingsSheet">
+  <div class="sheet-grip"></div>
+  <div class="sheet-head">
+    <b>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      تنظیمات ظاهر
+    </b>
+    <button class="sheet-close" onclick="closeSettings()" aria-label="بستن">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="sheet-body">
+    <div class="settings-section">
+      <div class="s-title">رنگ اصلی</div>
+      <div class="color-row">
+        <div class="color-dot gold-1 active" data-color="#d4a95a" onclick="pickAccent('#d4a95a', this)"></div>
+        <div class="color-dot gold-2" data-color="#c9a227" onclick="pickAccent('#c9a227', this)"></div>
+        <div class="color-dot rose" data-color="#d97a8f" onclick="pickAccent('#d97a8f', this)"></div>
+        <div class="color-dot blue" data-color="#7ba7d9" onclick="pickAccent('#7ba7d9', this)"></div>
+        <div class="color-dot green" data-color="#7bc99a" onclick="pickAccent('#7bc99a', this)"></div>
+        <div class="color-dot purple" data-color="#b48fd9" onclick="pickAccent('#b48fd9', this)"></div>
+        <div class="color-dot gray" data-color="#9ca3af" onclick="pickAccent('#9ca3af', this)"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="s-title">اندازه فونت</div>
+      <div class="setting-row">
+        <span class="s-label">متن فهرست</span>
+        <div class="slider-wrap">
+          <input type="range" min="13" max="22" step="0.5" value="15" id="fontSlider" oninput="setSetting('font-size', this.value + 'px', this.value + 'px')">
+          <span class="s-value" id="fontValue">15px</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span class="s-label">متن خواندن</span>
+        <div class="slider-wrap">
+          <input type="range" min="14" max="24" step="0.5" value="17" id="readerSlider" oninput="setSetting('reader-size', this.value + 'px', this.value + 'px')">
+          <span class="s-value" id="readerValue">17px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="s-title">فاصله‌ها</div>
+      <div class="setting-row">
+        <span class="s-label">بین عنوان‌ها</span>
+        <div class="slider-wrap">
+          <input type="range" min="0" max="12" step="1" value="2" id="titleGapSlider" oninput="setSetting('title-gap', this.value + 'px', this.value + 'px')">
+          <span class="s-value" id="titleGapValue">2px</span>
+        </div>
+      </div>
+      <div class="setting-row">
+        <span class="s-label">پدینگ عنوان‌ها</span>
+        <div class="slider-wrap">
+          <input type="range" min="2" max="16" step="1" value="6" id="titlePadSlider" oninput="setSetting('title-pad', this.value + 'px', this.value + 'px')">
+          <span class="s-value" id="titlePadValue">6px</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="s-title">عملیات</div>
+      <div class="btn-row">
+        <button class="s-btn" onclick="resetSettings()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          بازنشانی
+        </button>
+        <button class="s-btn primary" onclick="closeSettings()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          ذخیره شد
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- صفحه خواندن -->
+<div class="reader-page" id="readerPage" aria-hidden="true">
+  <div class="reader-topbar">
+    <button class="back-btn" onclick="closeReader()" aria-label="برگشت به فهرست">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </button>
+    <div class="rt-info">
+      <div class="rt-ch" id="readerChName">فصل</div>
+      <div class="rt-title" id="readerTitle">عنوان</div>
+    </div>
+    <button class="hdr-btn" id="readerBmBtn" onclick="toggleBookmarkFromReader()" aria-label="بوکمارک" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#fff;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;cursor:pointer;flex-shrink:0;padding:0;position:relative;z-index:2;transition:all .35s cubic-bezier(.34,1.56,.64,1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </button>
+    <div class="rt-num" id="readerChNum">۱</div>
+  </div>
+
+  <div class="reader-progress"><div class="bar" id="readerProgressBar"></div></div>
+  <div class="reader-content" id="readerBody"></div>
+</div>
+
+<!-- صفحه بوکمارک‌ها -->
+<div class="bookmarks-page" id="bookmarksPage" aria-hidden="true">
+  <div class="reader-topbar">
+    <button class="back-btn" onclick="closeBookmarks()" aria-label="برگشت">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </button>
+    <div class="rt-info">
+      <div class="rt-ch">نشان‌شده‌ها</div>
+      <div class="rt-title">بوکمارک‌های من</div>
+    </div>
+    <div class="rt-num">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+  </div>
+  <div class="reader-content" style="padding:0"><div class="bm-list" id="bmList"></div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+window.BOOK = [
+  { num: '۱', file: 'ch1', name: 'قلم، تنها همسفر سکوت‌هایم', count: 5, titles: [
+    'مقدمه', 'وقتی قلم حرف می‌زند', 'نوشتن روی خط تولید', 'چرخه‌ی بی‌پایان کار و فراموشی', 'گاهی شب‌ها',
+  ]},
+  { num: '۲', file: 'ch2', name: 'یادآوری لذت خاطرات کودکی', count: 12, titles: [
+    'رویاهای کودکی در سایه جنگ', 'قصه‌ای از ریشه‌ها و زخم‌ها', 'قطعه‌ای از بهشت', 'آن روزهای یواشکی لوارشکی',
+    'شهر زیر پلک‌ها', 'پدر، جاروگر ستاره‌ها', 'ستاره‌های گم‌شده', 'صداهای گم‌شده در غبار زمان',
+    'بازی‌های کودکی من', 'فرار اضطراری', 'روزی که خاک پیچ میدون مقدس شد', 'چرا بعضی باورها اینقدر موندگار می‌شن؟',
+  ]},
+  { num: '۳', file: 'ch3', name: 'از غربت تا آغوش مادر', count: 11, titles: [
+    'نگهبان مسخ شده', 'آخرین سفر پدر', 'تا همیشه باتو، پدر', 'آن روز بارانی', 'زخم‌ها به عشق منتهی می‌شوند',
+    'ستاره‌ای که ماه نبود', 'راهی که به سراب ختم می‌شود', 'در آخرین سفرم', 'درون قلب یخی شاید باغ زمستانی پنهان باشد',
+    'گوشواره‌ی باد', 'زخم وا شده',
+  ]},
+  { num: '۴', file: 'ch4', name: 'برجام دو', count: 5, titles: [
+    'قصه‌ای از نور، تصویر و خاطره', 'از آزمون تا زیارت', 'روایت صبر و شکوفه‌ی عشق',
+    'همسرم که همیشه مرا به حرکت می‌خوانی', 'حامی نباشی، خودم راه می‌روم',
+  ]},
+  { num: '۵', file: 'ch5', name: 'در تنهایی اقلیت اندیشه', count: 16, titles: [
+    'نصیحت از کی شنیده بشه', 'از ستاره‌ها تا سجده شکر', 'زبان حال دل شاعر', 'راز ستاره‌ها: نگاهی از شازده کوچک',
+    'ردی از دلتنگی در باران', 'شهر هزارتوی خیال', 'داستان باغبان و چشمک ستاره‌ها', 'نفس‌های سبز خزان',
+    'دنیای کوچک ما و جستجوی گمشده', 'با من بنویس، که شب همچنان ستاره‌باران است', 'اندازه‌ی اعتقاد آدم‌ها',
+    'خدایا تو را چگونه بجویم؟', 'هر آغاز پایانی دارد', 'آن‌هایی که شمع وجودشان گرمای کلماتم شد',
+    'به زلالی آوین', 'یک خاطره، یک پایان',
+  ]},
+];
+
+const ENDINGS = [
+  'و این‌گونه است که شب، روز می‌شود، و یأس، آستانه‌ی امید می‌گردد.',
+  'هر واژه، پنجره‌ای است به سوی نوری که در تاریکی، راه را نشان می‌دهد.',
+  'شاید این صفحات، آینه‌ای باشند از تنهایی‌های مشترک‌مان.',
+  'و اگر در این سطرها، چیزی از خودت را یافتی، بدان که این کتاب برای توست.',
+  'می‌نویسم، چون نفس می‌کشم؛ بی‌آنکه بدانم اکسیژن این نفس‌ها از کجا می‌آید.',
+  'و اینک، در این لحظه، اگر واژه‌ای از دل تو به پرواز درآید، آن را چون گوهری گران‌بها در دستانت خواهم گذاشت.',
+  'هر پایان، آغازی است با چشمانی بازتر.',
+  'پس مینویسم، نه برای امروز، که برای فردایی که شاید هیچ‌گاه نیاید.',
+  'و این حقیقت، تا همیشه در جانم باقی ماند که سرنوشت، نه فقط از تصمیم‌ها، بلکه از نجواهایی که در دل شب‌ها طنین‌انداز شده‌اند، ساخته می‌شود.',
+];
+
+const $ = s => document.querySelector(s);
+
+(function sprinkle() {
+  const sf = document.querySelector('.bg-canvas');
+  for (let i = 0; i < 25; i++) {
+    const s = document.createElement('span');
+    s.className = 'sparkle';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 4 + 's';
+    s.style.animationDuration = (3 + Math.random() * 3) + 's';
+    sf.appendChild(s);
+  }
+})();
+
+/* ابزار نرمال‌سازی متن برای جستجوی هوشمند */
+function normalizeText(str) {
+  return String(str)
+    .replace(/ي/g, 'ی')
+    .replace(/ك/g, 'ک')
+    .replace(/[ًٌٍَُِّْ]/g, '')
+    .replace(/ة/g, 'ه')
+    .toLowerCase();
+}
+
+/* الگوریتم Levenshtein برای پیدا کردن کلمات نزدیک */
+function levenshtein(a, b) {
+  if (a.length === 0) return b.length;
+  if (b.length === 0) return a.length;
+  const matrix = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j] + 1
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
+}
+
+/* جستجوی فازی در یک متن: آیا کلمه‌ی کاربر با کلمات متن شبیه است؟ */
+function fuzzyIncludes(text, query) {
+  const normText = normalizeText(text);
+  const normQuery = normalizeText(query).trim();
+  if (!normQuery) return false;
+  
+  // جستجوی مستقیم
+  if (normText.includes(normQuery)) return true;
+  
+  // جستجوی کلمه به کلمه با تحمل خطای تایپی
+  const queryWords = normQuery.split(/\s+/).filter(w => w.length >= 2);
+  const textWords = normText.split(/[\s،.:!؟\u200c\-()]+/).filter(w => w.length >= 2);
+  
+  if (queryWords.length === 0) return false;
+  
+  let matched = 0;
+  for (const qw of queryWords) {
+    // اگه کلمه‌ی کاربر کوتاهه، فقط شامل بودن رو چک کن
+    if (qw.length <= 3) {
+      if (textWords.some(tw => tw.includes(qw))) { matched++; continue; }
+    }
+    
+    // تحمل خطای تایپی: بر اساس طول کلمه
+    const maxDist = qw.length <= 4 ? 1 : qw.length <= 6 ? 2 : 3;
+    const found = textWords.some(tw => {
+      if (Math.abs(tw.length - qw.length) > maxDist) return false;
+      return levenshtein(tw, qw) <= maxDist;
+    });
+    if (found) matched++;
+  }
+  
+  return matched === queryWords.length;
+}
+
+function renderChapters(query = '') {
+  const wrap = $('#chapters');
+  const q = query.trim();
+  let totalResults = 0;
+
+  wrap.innerHTML = BOOK.map((ch, i) => {
+    const matches = [];
+    ch.titles.forEach((t, ti) => {
+      if (!q || normalizeText(t).includes(normalizeText(q)) || normalizeText(ch.name).includes(normalizeText(q))) {
+        matches.push({ title: t, index: ti });
+      }
+    });
+
+    if (q && matches.length === 0) return '';
+
+    totalResults += matches.length;
+    const isOpen = q ? true : false;
+
+    return `
+      <div class="chapter-block ${isOpen ? 'open' : ''}" data-chapter="${i}" style="animation-delay: ${i * 60}ms">
+        <div class="chapter-head" onclick="toggleChapter(${i})">
+          <div class="ch-num">${ch.num}</div>
+          <div class="ch-info">
+            <b>${highlightSmart(ch.name, q)}</b>
+            <span>${toFa(matches.length)} ${q ? 'نتیجه' : 'عنوان'}</span>
+          </div>
+          <div class="ch-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="6 9 12 15 18 9"/>
+            </svg>
+          </div>
+        </div>
+        <div class="titles-list">
+          <div class="titles-list-inner">
+            ${matches.map(m => `
+              <div class="title-item" onclick="openTitle(${i}, ${m.index})">
+                <span class="bullet"></span>
+                <span class="t-name">${highlightSmart(m.title, q)}</span>
+                <span class="t-go">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                  </svg>
+                </span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (q && totalResults === 0) {
+    $('#searchEmpty').classList.add('show');
+    wrap.innerHTML = '';
+  } else {
+    $('#searchEmpty').classList.remove('show');
+  }
+
+  if (q) {
+    $('#bookCount').textContent = `${toFa(totalResults)} نتیجه در عنوان‌ها`;
+  } else {
+    const total = BOOK.reduce((a, c) => a + c.count, 0);
+    $('#bookCount').textContent = `${toFa(BOOK.length)} فصل · ${toFa(total)} عنوان`;
+  }
+}
+
+function highlightSmart(text, q) {
+  if (!q) return text;
+  const nq = normalizeText(q);
+  const nt = normalizeText(text);
+  const idx = nt.indexOf(nq);
+  if (idx === -1) return text;
+  return text.substring(0, idx) +
+    '<mark class="hl">' + text.substring(idx, idx + q.length) + '</mark>' +
+    text.substring(idx + q.length);
+}
+
+function toggleChapter(i) {
+  document.querySelector(`[data-chapter="${i}"]`).classList.toggle('open');
+}
+
+function toFa(n) { return String(n).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]); }
+
+/* جستجو */
+let searchOpen = false;
+
+function toggleSearch() {
+  searchOpen = !searchOpen;
+  const wrap = $('#searchWrap');
+  if (searchOpen) {
+    wrap.style.display = 'block';
+    setTimeout(() => $('#searchInput').focus(), 50);
+  } else {
+    wrap.style.display = 'none';
+    clearSearch();
+  }
+}
+
+async function onSearch(val) {
+  const box = $('#searchBox');
+  const q = val.trim();
+  box.classList.toggle('has-value', val.length > 0);
+
+  if (!q) {
+    renderChapters('');
+    $('#searchEmpty').classList.remove('show');
+    return;
+  }
+
+  // جستجوی اولیه در عنوان‌ها (بدون فازی، برای سرعت)
+  renderChapters(val);
+  const wrap = $('#chapters');
+  const titleSearchHasResults = wrap.innerHTML.trim() !== '';
+
+  $('#bookCount').textContent = 'در حال جستجو در متن...';
+
+  try {
+    const chapterPromises = BOOK.map((ch, i) => loadChapter(i).catch(() => null));
+    const chaptersData = await Promise.all(chapterPromises);
+
+    let contentResults = 0;
+    let contentMatchesHTML = '';
+
+    BOOK.forEach((ch, chIndex) => {
+      const chData = chaptersData[chIndex];
+      if (!chData) return;
+
+      let chHasMatch = false;
+      let titlesHTML = '';
+
+      ch.titles.forEach((titleName, titleIndex) => {
+        const item = chData[titleIndex];
+        if (!item) return;
+
+        let text = Array.isArray(item.content) ? item.content.join(' ') : String(item.content || '');
+        
+        // استفاده از جستجوی فازی
+        if (fuzzyIncludes(text, q)) {
+          chHasMatch = true;
+          contentResults++;
+
+          // پیدا کردن بهترین نقطه برای پیش‌نمایش
+          let snippetStart = 0;
+          const normText = normalizeText(text);
+          const normQ = normalizeText(q);
+          
+          // اول تلاش برای پیدا کردن دقیق
+          let idx = normText.indexOf(normQ);
+          
+          // اگه دقیق نبود، با کلمه به کلمه پیدا کن
+          if (idx === -1) {
+            const words = normQ.split(/\s+/);
+            for (const w of words) {
+              const wi = normText.indexOf(w);
+              if (wi !== -1) { idx = wi; break; }
+            }
+          }
+          
+          if (idx !== -1) {
+            snippetStart = Math.max(0, idx - 40);
+          }
+          
+          const snippetEnd = Math.min(text.length, snippetStart + 120);
+          let snippet = text.substring(snippetStart, snippetEnd).trim();
+          
+          // هایلایت کلمات پیدا شده در پیش‌نمایش
+          const qWords = q.split(/\s+/).filter(w => w.length >= 2);
+          let snippetHtml = escapeHtml(snippet);
+          qWords.forEach(w => {
+            const re = new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+            snippetHtml = snippetHtml.replace(re, '<mark>$1</mark>');
+          });
+
+          titlesHTML += `
+            <div class="title-item" onclick="openTitle(${chIndex}, ${titleIndex})">
+              <span class="bullet" style="background:var(--gold)"></span>
+              <span class="t-name" style="color:var(--gold); font-weight:bold;">
+                ${titleName}
+                <div class="search-snippet">...${snippetHtml}...</div>
+              </span>
+              <span class="t-go" style="opacity:1;color:var(--gold)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="19" y1="12" x2="5" y2="12"/>
+                  <polyline points="12 19 5 12 12 5"/>
+                </svg>
+              </span>
+            </div>
+          `;
+        }
+      });
+
+      if (chHasMatch) {
+        contentMatchesHTML += `
+          <div class="chapter-block" style="border-color: var(--gold)">
+            <div class="chapter-head" style="cursor:default;">
+              <div class="ch-num">${ch.num}</div>
+              <div class="ch-info">
+                <b>${ch.name}</b>
+                <span>متن پیدا شد</span>
+              </div>
+            </div>
+            <div class="titles-list" style="max-height:3000px; display:block;">
+              <div class="titles-list-inner">${titlesHTML}</div>
+            </div>
+          </div>
+        `;
+      }
+    });
+
+    if (contentResults > 0) {
+      const titleResultsHTML = titleSearchHasResults ? `<div style="margin-bottom:12px;color:var(--muted);font-size:11px;padding-top:16px;">نتیجه در عنوان‌ها:</div>${wrap.innerHTML}` : '';
+      
+      wrap.innerHTML = `
+        <div style="margin-bottom:8px;color:var(--muted);font-size:11px;">نتیجه در متن‌ها (جستجوی هوشمند):</div>
+        ${contentMatchesHTML}
+        ${titleResultsHTML}
+      `;
+      $('#searchEmpty').classList.remove('show');
+      $('#bookCount').textContent = `${toFa(contentResults)} نتیجه در متن‌ها`;
+    } else if (!titleSearchHasResults) {
+      $('#searchEmpty').classList.add('show');
+      wrap.innerHTML = '';
+      $('#bookCount').textContent = 'نتیجه‌ای یافت نشد';
+    } else {
+      $('#bookCount').textContent = `نتیجه در عنوان‌ها`;
+    }
+
+  } catch (err) {
+    console.error("Search error:", err);
+    $('#bookCount').textContent = `نتیجه در عنوان‌ها`;
+  }
+}
+
+function clearSearch() {
+  $('#searchInput').value = '';
+  $('#searchBox').classList.remove('has-value');
+  renderChapters('');
+}
+
+/* بوکمارک‌ها */
+const BM_KEY = 'book-bookmarks-v1';
+let activeBookmark = null;
+
+function loadBookmarks() {
+  try { return JSON.parse(localStorage.getItem(BM_KEY) || '[]'); }
+  catch { return []; }
+}
+function saveBookmarks(list) {
+  localStorage.setItem(BM_KEY, JSON.stringify(list));
+}
+
+function isBookmarked(chIndex, titleIndex) {
+  return loadBookmarks().some(b => b.chIndex === chIndex && b.titleIndex === titleIndex);
+}
+
+function toggleBookmark(chIndex, titleIndex) {
+  let list = loadBookmarks();
+  const exists = list.findIndex(b => b.chIndex === chIndex && b.titleIndex === titleIndex);
+  if (exists >= 0) {
+    list.splice(exists, 1);
+    toast('از بوکمارک‌ها حذف شد');
+  } else {
+    list.push({ chIndex, titleIndex, addedAt: Date.now() });
+    toast('به بوکمارک‌ها اضافه شد');
+  }
+  saveBookmarks(list);
+  updateBookmarkBadge();
+  updateReaderBmBtn();
+}
+
+function updateBookmarkBadge() {
+  const btn = $('#bookmarkBtn');
+  const count = loadBookmarks().length;
+  if (count > 0) btn.classList.add('bookmark-active');
+  else btn.classList.remove('bookmark-active');
+}
+
+function updateReaderBmBtn() {
+  const btn = $('#readerBmBtn');
+  if (!btn || !activeBookmark) return;
+  const isBm = isBookmarked(activeBookmark.chIndex, activeBookmark.titleIndex);
+  btn.style.color = isBm ? 'var(--gold)' : '#fff';
+  btn.style.borderColor = isBm ? 'var(--gold)' : 'rgba(255,255,255,.1)';
+  btn.style.background = isBm ? 'rgba(212,169,90,.15)' : 'rgba(255,255,255,.06)';
+  btn.querySelector('svg').style.fill = isBm ? 'var(--gold)' : 'none';
+}
+
+function toggleBookmarkFromReader() {
+  if (!activeBookmark) return;
+  toggleBookmark(activeBookmark.chIndex, activeBookmark.titleIndex);
+}
+
+function openBookmarks() {
+  closeAll();
+  renderBookmarks();
+  const page = $('#bookmarksPage');
+  page.classList.add('open');
+  page.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeBookmarks() {
+  const page = $('#bookmarksPage');
+  page.classList.remove('open');
+  page.setAttribute('aria-hidden', 'true');
+  if (!$('#readerPage').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+
+function renderBookmarks() {
+  const list = loadBookmarks();
+  const container = $('#bmList');
+
+  if (list.length === 0) {
+    container.innerHTML = `
+      <div class="bm-empty">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+        </svg>
+        <b>هنوز بوکمارکی نداری</b>
+        <div>روی آیکون بوکمارک بالا بزن تا هر بخشی که دوست داری<br>برای بعد ذخیره کنی</div>
+      </div>
+    `;
+    return;
+  }
+
+  const sorted = [...list].sort((a, b) => b.addedAt - a.addedAt);
+
+  container.innerHTML = sorted.map((b, idx) => {
+    const ch = BOOK[b.chIndex];
+    if (!ch) return '';
+    const title = ch.titles[b.titleIndex];
+    if (!title) return '';
+    return `
+      <div class="bm-item" onclick="openFromBookmark(${b.chIndex}, ${b.titleIndex})" style="animation-delay:${idx * 40}ms">
+        <div class="bm-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+          </svg>
+        </div>
+        <div class="bm-info">
+          <div class="bm-ch">فصل ${ch.num} · ${ch.name}</div>
+          <div class="bm-title">${title}</div>
+        </div>
+        <button class="bm-remove" onclick="event.stopPropagation(); removeBookmark(${b.chIndex}, ${b.titleIndex})" aria-label="حذف">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    `;
+  }).join('');
+}
+
+function removeBookmark(chIndex, titleIndex) {
+  let list = loadBookmarks();
+  list = list.filter(b => !(b.chIndex === chIndex && b.titleIndex === titleIndex));
+  saveBookmarks(list);
+  updateBookmarkBadge();
+  renderBookmarks();
+  toast('از بوکمارک‌ها حذف شد');
+}
+
+function openFromBookmark(chIndex, titleIndex) {
+  closeBookmarks();
+  setTimeout(() => openTitle(chIndex, titleIndex), 200);
+}
+
+/* لود داینامیک */
+const chapterCache = {};
+let currentLoadToken = 0;
+
+function getChapterGlobalName(chIndex) { return 'CHAPTER_' + (chIndex + 1); }
+
+function loadChapter(chIndex) {
+  return new Promise((resolve, reject) => {
+    const ch = BOOK[chIndex];
+    if (!ch) return reject(new Error('فصل نامعتبر'));
+
+    const cacheKey = ch.file;
+    if (chapterCache[cacheKey]) return resolve(chapterCache[cacheKey]);
+
+    const globalName = getChapterGlobalName(chIndex);
+
+    if (window[globalName]) {
+      chapterCache[cacheKey] = window[globalName];
+      return resolve(window[globalName]);
+    }
+
+    const script = document.createElement('script');
+    script.src = `chapters/${ch.file}.js`;
+    script.async = true;
+
+    script.onload = () => {
+      if (window[globalName]) {
+        chapterCache[cacheKey] = window[globalName];
+        resolve(window[globalName]);
+      } else {
+        reject(new Error('ساختار فایل فصل نامعتبر است'));
+      }
+    };
+    script.onerror = () => reject(new Error('فایل فصل پیدا نشد'));
+
+    document.head.appendChild(script);
+  });
+}
+
+/* نوار پیشرفت */
+function updateProgress() {
+  const body = $('#readerBody');
+  const bar = $('#readerProgressBar');
+  if (!body || !bar) return;
+  const max = body.scrollHeight - body.clientHeight;
+  const pct = max > 0 ? (body.scrollTop / max) * 100 : 0;
+  bar.style.width = pct + '%';
+}
+
+function resetProgress() {
+  const bar = $('#readerProgressBar');
+  if (bar) bar.style.width = '0%';
+}
+
+(function attachProgress() {
+  const body = $('#readerBody');
+  if (body) body.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+})();
+
+async function openTitle(chIndex, titleIndex) {
+  const ch = BOOK[chIndex];
+  if (!ch) return;
+
+  const title = ch.titles[titleIndex];
+  const token = ++currentLoadToken;
+
+  activeBookmark = { chIndex, titleIndex };
+  
+  // ذخیره موقعیت
+  localStorage.setItem('book-last-read', JSON.stringify({ chIndex, titleIndex, timestamp: Date.now() }));
+
+  $('#readerChNum').textContent = ch.num;
+  $('#readerChName').textContent = ch.name;
+  $('#readerTitle').textContent = title;
+  updateReaderBmBtn();
+
+  const body = $('#readerBody');
+  body.innerHTML = `
+    <div class="inner">
+      <div class="loading">
+        <div class="spinner"></div>
+        <span>در حال بارگذاری متن…</span>
+      </div>
+    </div>
+  `;
+  body.scrollTop = 0;
+  resetProgress();
+
+  const page = $('#readerPage');
+  page.classList.add('open');
+  page.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+
+  try {
+    const chapterData = await loadChapter(chIndex);
+    if (token !== currentLoadToken) return;
+
+    const item = chapterData[titleIndex];
+    if (!item) {
+      body.innerHTML = `<div class="inner"><div class="error"><b>متن این عنوان یافت نشد</b>فایل فصل لود شد اما عنوان موردنظر در آن وجود ندارد.</div></div>`;
+      return;
+    }
+
+    renderContent(body, item.content);
+
+  } catch (err) {
+    if (token !== currentLoadToken) return;
+    body.innerHTML = `
+      <div class="inner">
+        <div class="error">
+          <b>خطا در بارگذاری</b>
+          ${escapeHtml(err.message)}<br>
+          <span style="font-size:11px; opacity:.7; margin-top:8px; display:inline-block">
+            مطمئن شوید فایل <code>chapters/${ch.file}.js</code> وجود دارد.
+          </span>
+        </div>
+      </div>
+    `;
+  }
+}
+
+function renderContent(container, content) {
+  let html = '';
+  if (Array.isArray(content)) {
+    html = content.map(p => `<p class="paragraph">${escapeHtml(p)}</p>`).join('');
+  } else if (typeof content === 'string') {
+    const paragraphs = content.split(/\n\s*\n/).filter(p => p.trim());
+    html = paragraphs.map(p => `<p class="paragraph">${escapeHtml(p.trim())}</p>`).join('');
+  } else {
+    html = `<div class="error"><b>محتوای نامعتبر</b>نوع داده پشتیبانی نمی‌شود.</div>`;
+  }
+
+  const ending = ENDINGS[Math.floor(Math.random() * ENDINGS.length)];
+
+  html += `
+    <div class="reader-end">
+      <div class="orn">✦ ✧ ✦</div>
+      <div class="end-quote">${escapeHtml(ending)}</div>
+      <div class="end-label">پایان این بخش</div>
+    </div>
+  `;
+
+  container.innerHTML = `<div class="inner">${html}</div>`;
+  container.scrollTop = 0;
+  setTimeout(updateProgress, 60);
+}
+
+function closeReader() {
+  const page = $('#readerPage');
+  page.classList.remove('open');
+  page.setAttribute('aria-hidden', 'true');
+  if (!drawer.classList.contains('open') && !sheet.classList.contains('open') && !$('#bookmarksPage').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+  currentLoadToken++;
+  resetProgress();
+  activeBookmark = null;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* منو و تنظیمات */
+const drawer = $('#drawer');
+const overlay = $('#overlay');
+const menuBtn = $('#menuBtn');
+
+function toggleMenu() {
+  if (drawer.classList.contains('open')) closeMenu();
+  else openMenu();
+}
+function openMenu() {
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+  menuBtn.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMenu() {
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+  menuBtn.classList.remove('open');
+  if (!$('#readerPage').classList.contains('open') && !$('#settingsSheet').classList.contains('open') && !$('#bookmarksPage').classList.contains('open')) {
+    document.body.style.overflow = '';
+  }
+}
+function closeAll() {
+  closeMenu();
+  closeSettings();
+}
+function menuAction(name) {
+  toast('باز شد: ' + name);
+  closeMenu();
+}
+
+const sheet = $('#settingsSheet');
+function openSettings() {
+  closeMenu();
+  setTimeout(() => {
+    sheet.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }, 250);
+}
+function closeSettings() {
+  sheet.classList.remove('open');
+  if (!drawer.classList.contains('open') && !$('#readerPage').classList.contains('open') && !$('#bookmarksPage').classList.contains('open')) {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+/* تنظیمات */
+const SETTINGS_KEY = 'book-settings-v1';
+const DEFAULT_SETTINGS = {
+  accent: '#d4a95a',
+  'font-size': '15px',
+  'reader-size': '17px',
+  'title-gap': '2px',
+  'title-pad': '6px',
+};
+
+function loadSettings() {
+  try {
+    return { ...DEFAULT_SETTINGS, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}') };
+  } catch { return { ...DEFAULT_SETTINGS }; }
+}
+function saveSettings(s) { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); }
+
+function applySettings(s) {
+  const root = document.documentElement;
+  root.style.setProperty('--font-size', s['font-size']);
+  root.style.setProperty('--reader-size', s['reader-size']);
+  root.style.setProperty('--title-gap', s['title-gap']);
+  root.style.setProperty('--title-pad', s['title-pad']);
+  root.style.setProperty('--gold', s.accent);
+
+  const rgb = hexToRgb(s.accent);
+  if (rgb) {
+    const soft = `rgb(${Math.round(rgb.r*.25)}, ${Math.round(rgb.g*.25)}, ${Math.round(rgb.b*.25)})`;
+    root.style.setProperty('--gold-soft', soft);
+  }
+
+  document.querySelectorAll('.color-dot').forEach(d => {
+    d.classList.toggle('active', d.dataset.color.toLowerCase() === s.accent.toLowerCase());
+  });
+}
+
+function setSetting(key, value, display) {
+  const s = loadSettings();
+  s[key] = value;
+  saveSettings(s);
+  applySettings(s);
+  const map = {
+    'font-size': 'fontValue',
+    'reader-size': 'readerValue',
+    'title-gap': 'titleGapValue',
+    'title-pad': 'titlePadValue',
+  };
+  const disp = document.getElementById(map[key]);
+  if (disp && display) disp.textContent = display;
+}
+
+function pickAccent(color) {
+  const s = loadSettings();
+  s.accent = color;
+  saveSettings(s);
+  applySettings(s);
+}
+
+function resetSettings() {
+  localStorage.removeItem(SETTINGS_KEY);
+  const s = { ...DEFAULT_SETTINGS };
+  saveSettings(s);
+  applySettings(s);
+  syncUI(s);
+  toast('تنظیمات بازنشانی شد');
+}
+
+function syncUI(s) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = parseFloat(val); };
+  const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('fontSlider', s['font-size']);       setText('fontValue', s['font-size']);
+  set('readerSlider', s['reader-size']);   setText('readerValue', s['reader-size']);
+  set('titleGapSlider', s['title-gap']);   setText('titleGapValue', s['title-gap']);
+  set('titlePadSlider', s['title-pad']);   setText('titlePadValue', s['title-pad']);
+}
+
+function hexToRgb(hex) {
+  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
+  if (!m) return null;
+  const n = parseInt(m[1], 16);
+  return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+let toastTimer;
+function toast(msg) {
+  const t = $('#toast');
+  t.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.6-6.3 4.6 2.3-7.4-6-4.6h7.6z"/></svg><span>' + msg + '</span>';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if ($('#readerPage').classList.contains('open')) closeReader();
+    else if ($('#bookmarksPage').classList.contains('open')) closeBookmarks();
+    else if (searchOpen) toggleSearch();
+    else closeAll();
+  }
+});
+
+(function init() {
+  renderChapters();
+  const s = loadSettings();
+  applySettings(s);
+  syncUI(s);
+  updateBookmarkBadge();
+
+  const splash = document.getElementById('splashScreen');
+  setTimeout(() => {
+    splash.classList.add('hidden');
+    setTimeout(() => splash.remove(), 800); 
+  }, 3000); 
+})();
+
+// برای دسترسی app.js به توابع و داده‌های اصلی
+window.openTitle = openTitle;
+window.closeReader = closeReader;
+window.onSearch = onSearch;
+window.toast = toast;
+window.BOOK = BOOK;
+</script>
+<script src="app.js"></script>
+</body>
+</html>

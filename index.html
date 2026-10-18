@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#0a0d14">
 <title>در شبی ستاره باران — فهرست</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/fonts/webfonts/Vazirmatn-Regular.woff2" rel="preload" as="font" type="font/woff2" crossorigin>
 
 <style>
@@ -389,11 +390,14 @@
     </svg>
   </button>
 
-  <div class="mark">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7.4-6.3-4.6-6.3 4.6 2.3-7.4-6-4.6h7.6z"/>
-    </svg>
-  </div>
+<!-- دکمه موسیقی (به جای ستاره) -->
+<button class="hdr-btn" id="mainMusicBtn" onclick="toggleHeaderMusic()" title="پخش موسیقی">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+  </svg>
+</button>
+
+
 </header>
 
 <main class="container">
@@ -1257,6 +1261,7 @@ function renderContent(container, content) {
   }
 
   const ending = ENDINGS[Math.floor(Math.random() * ENDINGS.length)];
+  const postId = `post_${activeBookmark.chIndex}_${activeBookmark.titleIndex}`;
 
   html += `
     <div class="reader-end">
@@ -1264,11 +1269,27 @@ function renderContent(container, content) {
       <div class="end-quote">${escapeHtml(ending)}</div>
       <div class="end-label">پایان این بخش</div>
     </div>
+
+    <!-- بخش لایک و بازدید -->
+    <div class="post-footer">
+      <div class="view-count" id="view-${postId}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>در حال بارگذاری...</span>
+      </div>
+      
+      <button class="like-btn" id="like-${postId}" onclick="handleLike('${postId}')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        <span>لایک</span>
+      </button>
+    </div>
   `;
 
   container.innerHTML = `<div class="inner">${html}</div>`;
   container.scrollTop = 0;
   setTimeout(updateProgress, 60);
+  
+  // این خط برای لود کردن آمار لایک و بازدید است
+  loadPostStats(postId);
 }
 
 function closeReader() {
@@ -1463,6 +1484,85 @@ window.onSearch = onSearch;
 window.toast = toast;
 window.BOOK = BOOK;
 </script>
-<script src="app.js"></script>
+
+  <audio id="headerAudio" src="music.mp3" loop></audio>
+
+<script>
+  let isMusicPlaying = false;
+  function toggleHeaderMusic() {
+    const audio = document.getElementById('headerAudio');
+    const btn = document.getElementById('mainMusicBtn');
+    
+    if (isMusicPlaying) {
+      audio.pause();
+      isMusicPlaying = false;
+      btn.style.color = '#fff';
+      btn.style.borderColor = 'rgba(255,255,255,.1)';
+      btn.style.background = 'rgba(255,255,255,.06)';
+    } else {
+      audio.play().then(() => {
+        isMusicPlaying = true;
+        btn.style.color = 'var(--gold)';
+        btn.style.borderColor = 'var(--gold)';
+        btn.style.background = 'rgba(212,169,90,.15)';
+      }).catch((error) => {
+        alert('خطا در پخش موسیقی: ' + error.message);
+      });
+    }
+  }
+</script>
+
+  <script>
+  // ⚠️ فقط این خط کلید رو باید از داشبورد کپی کنی (بخش Publishable key یا Legacy anon)
+  const SUPABASE_URL = 'https://lfoofzkdfxgamifaqnoh.supabase.co';
+  const SUPABASE_KEY = 'کلید_خودت_رو_اینجا_بذار';
+
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  async function loadPostStats(postId) {
+    const viewEl = document.getElementById(`view-${postId}`);
+    if (!viewEl) return;
+    const isLiked = localStorage.getItem(`isLiked_${postId}`) === 'true';
+
+    try {
+      let { data, error } = await supabase.from('post_stats').select('*').eq('post_id', postId).single();
+      
+      if (error && error.code === 'PGRST116') {
+        const { data: newData, error: insertError } = await supabase.from('post_stats').insert([{ post_id: postId, views: 1, likes: 0 }]).select().single();
+        if (insertError) throw insertError;
+        data = newData;
+      } else if (data) {
+        const { data: updatedData, error: updateError } = await supabase.from('post_stats').update({ views: data.views + 1 }).eq('post_id', postId).select().single();
+        if (updateError) throw updateError;
+        data = updatedData;
+      }
+
+      if (data) {
+        viewEl.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>${data.views} بازدید</span>`;
+        updateLikeUI(postId, data.likes, isLiked);
+      }
+    } catch (err) { console.error('خطا در دیتابیس:', err); }
+  }
+
+  async function handleLike(postId) {
+    const isLiked = localStorage.getItem(`isLiked_${postId}`) === 'true';
+    try {
+      const { data, error } = await supabase.from('post_stats').select('likes').eq('post_id', postId).single();
+      if (error) throw error;
+      let newLikes = isLiked ? Math.max(0, data.likes - 1) : data.likes + 1;
+      localStorage.setItem(`isLiked_${postId}`, String(!isLiked));
+      await supabase.from('post_stats').update({ likes: newLikes }).eq('post_id', postId);
+      updateLikeUI(postId, newLikes, !isLiked);
+    } catch (err) { console.error('خطا در لایک:', err); }
+  }
+
+  function updateLikeUI(postId, likes, isLiked) {
+    const btn = document.getElementById(`like-${postId}`);
+    if (!btn) return;
+    btn.classList.toggle('liked', isLiked);
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="${isLiked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>${likes} لایک</span>`;
+  }
+</script>
+  
 </body>
 </html>
